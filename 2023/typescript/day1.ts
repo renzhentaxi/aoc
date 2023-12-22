@@ -36,12 +36,14 @@ const NUMBER_WORDS = "one,two,three,four,five,six,seven,eight,nine"
   .split(",")
   .map((value, index) => [value, index + 1] as const);
 
+NUMBER_WORDS.push(
+  ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(
+    (value) => [value.toString(), value] as const
+  )
+);
+
 function getFirstNumber(line: string) {
   for (let i = 0; i < line.length; i++) {
-    const charCode = line.charCodeAt(i);
-    if (CHARCODES["0"] <= charCode && charCode <= CHARCODES["9"]) {
-      return charCode - CHARCODES["0"];
-    }
     for (const [numberWord, numberValue] of NUMBER_WORDS) {
       if (line.slice(i, i + numberWord.length) === numberWord) {
         return numberValue;
@@ -50,12 +52,9 @@ function getFirstNumber(line: string) {
   }
   throw new Error(`No number in ${line}`);
 }
+
 function getSecondNumber(line: string) {
   for (let i = line.length; i >= 0; i--) {
-    const charCode = line.charCodeAt(i);
-    if (CHARCODES["0"] <= charCode && charCode <= CHARCODES["9"]) {
-      return charCode - CHARCODES["0"];
-    }
     for (const [numberWord, numberValue] of NUMBER_WORDS) {
       if (line.slice(i - numberWord.length, i) === numberWord) {
         return numberValue;
@@ -64,6 +63,7 @@ function getSecondNumber(line: string) {
   }
   throw new Error(`No number in ${line}`);
 }
+
 function getFirstAndLastPart2(line: string) {
   return getFirstNumber(line) * 10 + getSecondNumber(line);
 }
