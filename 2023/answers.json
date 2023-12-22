@@ -1,0 +1,28 @@
+{
+  "typescript": {
+    "day1": {
+      "example_1.txt": {
+        "part1": 142,
+        "part2": 142
+      },
+      "example_2.txt": {
+        "part1": 209,
+        "part2": 281
+      },
+      "main.txt": {
+        "part1": 54968,
+        "part2": 54094
+      }
+    },
+    "day2": {
+      "example_1.txt": {
+        "part1": 8,
+        "part2": 2286
+      },
+      "main.txt": {
+        "part1": 2149,
+        "part2": 71274
+      }
+    }
+  }
+}

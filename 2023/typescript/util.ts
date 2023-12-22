@@ -29,23 +29,39 @@ export async function solve<TInput>(
   solvers: Record<string, (input: TInput) => any>
 ) {
   const inputs = await getInputs();
-  const answers: Record<string, Record<string, any>> = {};
+  const answers: AnswerUpdate[] = [];
   for (const [inputName, input] of inputs) {
-    const inputAnswer: Record<string, any> = {};
     const parsedInput = inputParser(input);
     console.log("=====", inputName, "=====");
     for (const [name, solver] of Object.entries(solvers)) {
       const answer = solver(parsedInput);
       console.log(`${name}: ${answer}`);
-      inputAnswer[name] = answer;
+      answers.push({ answer, inputName, part: name });
     }
-    answers[inputName] = inputAnswer;
   }
 
-  await writeFile(
-    resolve(__dirname, `${inputPrefix}_answer.json`),
-    JSON.stringify(answers, undefined, 2)
-  );
+  updateAnswer(answers);
+}
+
+interface AnswerUpdate {
+  inputName: string;
+  part: string;
+  answer: any;
+}
+async function updateAnswer(updates: AnswerUpdate[]) {
+  const answerPath = resolve(__dirname, "../answers.json");
+  const answerJson = JSON.parse(await readFile(answerPath, "utf8"));
+  const day = inputPrefix.replace("_", "");
+  const typescriptAnswers = (answerJson["typescript"] =
+    answerJson["typescript"] ?? {});
+  const dayAnswers = (typescriptAnswers[day] = typescriptAnswers[day] ?? {});
+
+  for (const update of updates) {
+    const inputAnswers = (dayAnswers[update.inputName] =
+      dayAnswers[update.inputName] ?? {});
+    inputAnswers[update.part] = update.answer;
+  }
+  await writeFile(answerPath, JSON.stringify(answerJson, undefined, 2));
 }
 
 export function sum(list: number[]): number;
