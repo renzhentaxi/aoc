@@ -1,4 +1,4 @@
-import { solve } from "./util";
+import { solve, sum } from "./util";
 
 const CHARCODES = {
   "0": "0".charCodeAt(0),
@@ -26,9 +26,7 @@ function getFirstAndLast(line: string) {
 }
 
 function part1(input: string[]) {
-  const answer = input
-    .map((line) => getFirstAndLast(line))
-    .reduce((sum, value) => sum + value, 0);
+  const answer = sum(input.map((line) => getFirstAndLast(line)));
   return answer;
 }
 
@@ -69,9 +67,7 @@ function getFirstAndLastPart2(line: string) {
 }
 
 function part2(input: string[]) {
-  const answer = input
-    .map((line) => getFirstAndLastPart2(line))
-    .reduce((sum, value) => sum + value, 0);
+  const answer = sum(input.map((line) => getFirstAndLastPart2(line)));
   return answer;
 }
 

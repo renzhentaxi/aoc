@@ -1,8 +1,8 @@
-import { readFile, readdir } from "fs/promises";
+import { readFile, readdir, writeFile } from "fs/promises";
 import { resolve, basename } from "path";
 
+const inputPrefix = basename(process.argv[1], ".ts") + "_";
 async function getInputs() {
-  const prefix = basename(process.argv[1], ".ts") + "_";
   const inputNameWhitelist = process.argv
     .slice(2)
     .map((name) => (name.endsWith(".txt") ? name : name + ".txt"));
@@ -10,8 +10,8 @@ async function getInputs() {
   const filepaths = await readdir(root);
   const inputs: [string, string][] = [];
   for (const filepath of filepaths) {
-    if (filepath.startsWith(prefix)) {
-      const name = filepath.replace(prefix, "");
+    if (filepath.startsWith(inputPrefix)) {
+      const name = filepath.replace(inputPrefix, "");
       if (
         inputNameWhitelist.length > 0 &&
         !inputNameWhitelist.includes(`${name}`)
@@ -29,11 +29,35 @@ export async function solve<TInput>(
   solvers: Record<string, (input: TInput) => any>
 ) {
   const inputs = await getInputs();
+  const answers: Record<string, Record<string, any>> = {};
   for (const [inputName, input] of inputs) {
+    const inputAnswer: Record<string, any> = {};
     const parsedInput = inputParser(input);
     console.log("=====", inputName, "=====");
     for (const [name, solver] of Object.entries(solvers)) {
-      console.log(`${name}: ${solver(parsedInput)}`);
+      const answer = solver(parsedInput);
+      console.log(`${name}: ${answer}`);
+      inputAnswer[name] = answer;
+    }
+    answers[inputName] = inputAnswer;
+  }
+
+  await writeFile(
+    resolve(__dirname, `${inputPrefix}_answer.json`),
+    JSON.stringify(answers, undefined, 2)
+  );
+}
+
+export function sum(list: number[]): number;
+export function sum<T>(list: T[], mapper: (value: T) => number): number;
+export function sum<T>(list: T[], mapper?: (value: T) => number): number {
+  let total = 0;
+  for (let item of list) {
+    if (mapper) {
+      total += mapper(item);
+    } else {
+      total += item as number;
     }
   }
+  return total;
 }

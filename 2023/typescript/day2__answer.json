@@ -1,0 +1,10 @@
+{
+  "example_1.txt": {
+    "part1": 8,
+    "part2": 2286
+  },
+  "main.txt": {
+    "part1": 2149,
+    "part2": 71274
+  }
+}

@@ -1,39 +1,16 @@
-import { solve } from "./util";
-
-const CHARCODES = {
-  "0": "0".charCodeAt(0),
-  "9": "9".charCodeAt(0),
-};
-
-function getFirstAndLast(line: string) {
-  let firstAndLast = 0;
-  for (let i = 0; i < line.length; i++) {
-    const charCode = line.charCodeAt(i);
-    if (CHARCODES["0"] <= charCode && charCode <= CHARCODES["9"]) {
-      firstAndLast += 10 * (charCode - CHARCODES["0"]);
-      break;
-    }
-  }
-
-  for (let i = line.length - 1; i >= 0; i--) {
-    const charCode = line.charCodeAt(i);
-    if (CHARCODES["0"] <= charCode && charCode <= CHARCODES["9"]) {
-      firstAndLast += charCode - CHARCODES["0"];
-      break;
-    }
-  }
-  return firstAndLast;
-}
+import { solve, sum } from "./util";
 
 interface GameDetail {
   red: number;
   blue: number;
   green: number;
 }
+
 interface Game {
   id: number;
   details: GameDetail[];
 }
+
 function isPossible(limit: GameDetail, game: GameDetail[]) {
   for (const gameInstance of game) {
     if (
@@ -50,9 +27,10 @@ function isPossible(limit: GameDetail, game: GameDetail[]) {
 
 function part1(games: Game[]) {
   const limit: GameDetail = { red: 12, green: 13, blue: 14 };
-  return games
-    .filter((game) => isPossible(limit, game.details))
-    .reduce((sum, game) => (sum += game.id), 0);
+  return sum(
+    games.filter((game) => isPossible(limit, game.details)),
+    (game) => game.id
+  );
 }
 
 function getMinLimit(game: Game) {
