@@ -1,4 +1,4 @@
-import { getInputs, solve } from "./util";
+import { solve } from "./util";
 
 const CHARCODES = {
   "0": "0".charCodeAt(0),

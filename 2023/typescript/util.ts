@@ -1,7 +1,7 @@
 import { readFile, readdir } from "fs/promises";
 import { resolve, basename } from "path";
 
-export async function getInputs() {
+async function getInputs() {
   const prefix = basename(process.argv[1], ".ts") + "_";
   const inputNameWhitelist = process.argv
     .slice(2)
