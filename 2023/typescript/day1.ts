@@ -1,4 +1,4 @@
-import { getInputs } from "./util";
+import { getInputs, solve } from "./util";
 
 const CHARCODES = {
   "0": "0".charCodeAt(0),
@@ -75,14 +75,7 @@ function part2(input: string[]) {
   return answer;
 }
 
-async function solve() {
-  const inputs = await getInputs();
-  for (const [inputName, input] of inputs) {
-    const asLines = input.split("\n");
-
-    console.log("=====", inputName, "=====");
-    console.log(`Part 1: ${part1(asLines)}`);
-    console.log(`Part 2: ${part2(asLines)}`);
-  }
-}
-solve();
+solve((raw) => raw.split("\n"), {
+  part1,
+  part2,
+});
